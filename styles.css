@@ -1,0 +1,235 @@
+@import url("https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap");
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Oxanium", cursive;
+}
+
+html,
+body {
+  text-align: center;
+  background: linear-gradient(to bottom, #6ab7f5, #fff);
+  min-height: 100vh;
+  font-size: 62.5%;
+}
+
+main {
+  display: inline-block;
+  margin-top: 2%;
+  position: relative;
+}
+
+.pokedex {
+  width: 100%;
+  max-width: 425px;
+}
+
+.pokemon__image {
+  position: absolute;
+  bottom: 55%;
+  left: 50%;
+  transform: translate(-63%, 20%);
+  height: 18%;
+}
+
+.pokemon__data {
+  position: absolute;
+  font-weight: 600;
+  color: #aaa;
+  top: 54.5%;
+  right: 27%;
+  font-size: clamp(8px, 5vw, 25px);
+}
+
+.pokemon__name {
+  color: #3a444d;
+  text-transform: capitalize;
+}
+
+.form {
+  position: absolute;
+  width: 65%;
+  top: 65%;
+  left: 13.5%;
+}
+.evolucao {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  top: 75%;
+  left: 40.5%;
+}
+.input__search {
+  width: 100%;
+  padding: 4%;
+  outline: none;
+  border: 2px solid #333;
+  border-radius: 5px;
+  font-weight: 600;
+  color: #3a444d;
+  font-size: clamp(8px, 5vw, 1rem);
+  box-shadow: -3px 4px 0 #888, -5px 7px 0 #333;
+}
+
+.buttons {
+  position: absolute;
+  bottom: 10%;
+  left: 50%;
+  width: 65%;
+  transform: translate(-57%, 0);
+  display: flex;
+  gap: 20px;
+}
+
+.button {
+  width: 50%;
+  padding: 4%;
+  border: 2px solid #000;
+  border-radius: 5px;
+  font-size: clamp(8px, 5vw, 1rem);
+  font-weight: 600;
+  color: white;
+  background-color: #444;
+  box-shadow: -2px 3px 0 #222, -4px 6px 0 #000;
+}
+
+.button:active {
+  box-shadow: inset -4px 4px 0 #222;
+  font-size: 0.9rem;
+}
+
+.evoGroup {
+  position: absolute;
+  left: 70%;
+  top: 6%;
+  & h2 {
+    font-size: 3rem;
+    text-align: left;
+  }
+  & #pokemonImages {
+    display: grid;
+    list-style: none;
+    border-radius: 1.5rem;
+    row-gap: 1rem;
+    width: max-content;
+    overflow-y: scroll;
+    height: 60rem;
+
+    /* Barra de rolagem */
+    &::-webkit-scrollbar {
+      width: 10px; /* largura da barra de rolagem */
+    }
+
+    /* Track (faixa onde a barra de rolagem se move) */
+    &::-webkit-scrollbar-track {
+      background: transparent; /* cor de fundo */
+    }
+
+    /* Thumb (o indicador da posição atual) */
+    &::-webkit-scrollbar-thumb {
+      background: #888; /* cor do indicador */
+      border-radius: 10px; /* borda arredondada */
+    }
+
+    & li {
+      border-radius: 1.5rem;
+      column-gap: 2rem;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      width: 100%;
+      height: max-content;
+      padding-right: 1rem;
+      & img {
+        object-fit: contain;
+        width: 15rem;
+      }
+      & div {
+        display: flex;
+        flex-direction: column;
+        align-items: baseline;
+
+        & .name {
+          font-size: 2.3rem;
+        }
+        & .numero {
+          font-size: 2.3rem;
+        }
+        & .type {
+          padding: 0.5rem;
+          border: 1px solid;
+          width: max-content;
+          background-color: #000;
+          border: none;
+          color: #fff;
+          font-weight: 600;
+          border-radius: 1.5rem;
+          padding: 0.6rem;
+          font-size: 1.4rem;
+          margin-bottom: 0.5rem;
+        }
+        & .row {
+          display: flex;
+        }
+      }
+    }
+  }
+}
+.bug {
+  background-color: #194323;
+}
+.dark {
+  background-color: #040707;
+  color: #fff;
+}
+.dragon {
+  background-color: #438893;
+}
+.electric {
+  background-color: #e2e32b;
+}
+.fairy {
+  background-color: #961a45;
+}
+.fighting {
+  background-color: #994025;
+}
+.fire {
+  background-color: #ab1f24;
+}
+.flying {
+  background-color: #4a677d;
+}
+.ghost {
+  background-color: #33336a;
+}
+.grass {
+  background-color: #147b3d;
+}
+.ground {
+  background-color: #a8702d;
+}
+.ice {
+  background-color: #86d2f5;
+}
+.normal {
+  background-color: #75525c;
+}
+.poison {
+  background-color: #5e2d89;
+}
+.psychic {
+  background-color: #a52a6c;
+}
+.rock {
+  background-color: #48190b;
+}
+.steel {
+  background-color: #60756e;
+}
+.water {
+  background-color: #1552e1;
+}
