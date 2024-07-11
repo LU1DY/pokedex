@@ -127,7 +127,10 @@ const fetchMultiplePokemon = async (pokemonList) => {
       liElement.classList.add(data.types[0].type.name); // Adiciona a classe do tipo principal
 
       const imgElement = document.createElement("img");
-      imgElement.src = data.sprites.other["official-artwork"].front_default;
+      imgElement.src =
+        data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
+          "front_default"
+        ];
       imgElement.alt = data.name;
 
       const infoElement = document.createElement("div");
