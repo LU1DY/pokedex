@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokémon TCG API Example</title>
+    <style>
+        .card {
+            display: inline-block;
+            margin: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+        .card img {
+            max-width: 200px;
+            max-height: 300px;
+        }
+    </style>
+</head>
+<body>
+    <label for="pokemon-name">Nome do Pokémon:</label>
+    <input type="text" id="pokemon-name" placeholder="Digite o nome do Pokémon">
+    <button onclick="searchPokemonCards()">Buscar Cartas</button>
+
+    <div id="cards-container"></div>
+
+    <script>
+        async function searchPokemonCards() {
+            const pokemonName = document.getElementById('pokemon-name').value.trim().toLowerCase();
+            const apiUrl = `https://api.pokemontcg.io/v1/cards?name=${pokemonName}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Limpar o conteúdo atual
+                const cardsContainer = document.getElementById('cards-container');
+                cardsContainer.innerHTML = '';
+
+                // Verificar se foram encontradas cartas
+                if (data.cards.length === 0) {
+                    const noCardsMessage = document.createElement('p');
+                    noCardsMessage.textContent = `Não foram encontradas cartas de Pokémon com o nome "${pokemonName}".`;
+                    cardsContainer.appendChild(noCardsMessage);
+                } else {
+                    // Iterar sobre as cartas e exibir na página
+                    data.cards.forEach(card => {
+                        const cardElement = document.createElement('div');
+                        cardElement.classList.add('card');
+
+                        const cardImage = document.createElement('img');
+                        cardImage.src = card.imageUrl;
+                        cardImage.alt = card.name;
+
+                        const cardName = document.createElement('p');
+                        cardName.textContent = card.name;
+
+                        cardElement.appendChild(cardImage);
+                        cardElement.appendChild(cardName);
+
+                        cardsContainer.appendChild(cardElement);
+                    });
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar cartas Pokémon:', error);
+            }
+        }
+    </script>
+</body>
+</html>

@@ -6,79 +6,114 @@ const input = document.querySelector(".input__search");
 const btnPrev = document.querySelector(".btn-prev");
 const btnNext = document.querySelector(".btn-next");
 const pokemonImages = document.getElementById("pokemonImages");
+const statsBox = document.querySelector(".atributo");
+const typesBox = document.querySelector(".type");
+const description = document.querySelector(".desc");
 
 let index = 1;
 
-// Função para buscar informações de um Pokémon
+const clearElements = () => {
+  typesBox.innerHTML = "";
+  pokemonImages.innerHTML = "";
+};
+
 const fetchPokemon = async (pokemon) => {
-  const apiResponse = await fetch(
-    `https://pokeapi.co/api/v2/pokemon/${pokemon}`
-  );
-  if (apiResponse.status === 200) {
-    const data = await apiResponse.json();
-    return data;
-  } else {
-    console.error(`Erro ao buscar dados do Pokémon: ${pokemon}`);
+  try {
+    const apiResponse = await fetch(
+      `https://pokeapi.co/api/v2/pokemon/${pokemon}`
+    );
+    if (apiResponse.ok) {
+      return await apiResponse.json();
+    } else {
+      throw new Error(`Erro ao buscar dados do Pokémon: ${pokemon}`);
+    }
+  } catch (error) {
+    console.error(error);
     return null;
   }
 };
 
-// Função para renderizar um Pokémon
 const renderPokemon = async (pokemon) => {
-  pokeName.innerHTML = "Loading...";
+  pokeName.innerHTML = "Carregando...";
   pokeNumber.innerHTML = "";
+  pokeImg.style.display = "none";
   const data = await fetchPokemon(pokemon);
 
   if (data) {
+    const stats = {};
+    data.stats.forEach((stat) => {
+      stats[stat.stat.name] = stat.base_stat;
+    });
+    statsBox.innerHTML = `
+    <p><span>HP</span>${stats.hp}</p>
+    <p><span>Ataque</span>${stats.attack}</p>
+    <p><span>Defesa</span>${stats.defense}</p>
+    <p><span>Ataque Especial</span>${stats["special-attack"]}</p>
+    <p><span>Defesa Especial</span>${stats["special-defense"]}</p>
+    <p><span>Velocidade</span>${stats.speed}</p>`;
+    const types = data.types.map((typeInfo) => typeInfo.type.name);
+    typesBox.innerHTML = ""; // Limpar antes de adicionar novos tipos
+    types.forEach((type) => {
+      typesBox.innerHTML += `<p>${type}</p>`;
+    });
     pokeName.innerHTML = data.name;
     pokeNumber.innerHTML = data.id;
 
     const pokeImgGif =
-      data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
-        "front_default"
-      ];
-    const pokeImgPng = data["sprites"]["front_default"];
+      data.sprites.versions["generation-v"]["black-white"].animated
+        .front_default;
+    const pokeImgPng = data.sprites.front_default;
 
     pokeImg.src = pokeImgGif ? pokeImgGif : pokeImgPng;
     pokeImg.style.display = "block";
     input.value = "";
     index = data.id;
   } else {
-    pokeName.innerHTML = `Not found`;
+    pokeName.innerHTML = `Não encontrado`;
     pokeNumber.innerHTML = "404";
-    pokeImg.src = "pikachu.png";
+    pokeImg.src = "assets/pikachu.png";
     input.value = "";
   }
 };
 
-// Função para buscar informações de um grupo evolutivo
 async function fetchEvolutionGroup(pokemon) {
-  const apiResponse = await fetch(
-    `https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`
-  );
-  if (apiResponse.status === 200) {
-    const data = await apiResponse.json();
-    const evoGroup = data.evolution_chain.url;
-    return evoGroup;
-  } else {
-    throw new Error(`Erro ao buscar grupo evolutivo do Pokémon: ${pokemon}`);
+  try {
+    const apiResponse = await fetch(
+      `https://pokeapi.co/api/v2/pokemon-species/${pokemon}/`
+    );
+    if (apiResponse.ok) {
+      const data = await apiResponse.json();
+      const evoGroup = data.evolution_chain.url;
+      for (const entry of data.flavor_text_entries) {
+        if (entry.language.name === "en") {
+          description.innerHTML = `${entry.flavor_text}`;
+          break;
+        }
+      }
+      return evoGroup;
+    } else {
+      throw new Error(`Erro ao buscar grupo evolutivo do Pokémon: ${pokemon}`);
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 }
 
-// Função para buscar informações de uma cadeia evolutiva
 const fetchEvolutionChain = async (evoGroupUrl) => {
-  const apiResponse = await fetch(evoGroupUrl);
-  if (apiResponse.status === 200) {
-    const data = await apiResponse.json();
-    console.log(data);
-
-    return data;
-  } else {
-    throw new Error(`Erro ao buscar cadeia evolutiva: ${evoGroupUrl}`);
+  try {
+    const apiResponse = await fetch(evoGroupUrl);
+    if (apiResponse.ok) {
+      return await apiResponse.json();
+    } else {
+      throw new Error(`Erro ao buscar cadeia evolutiva: ${evoGroupUrl}`);
+    }
+  } catch (error) {
+    console.error(error);
+    return null;
   }
 };
 
-// Função para extrair nomes de espécies de Pokémon de uma cadeia evolutiva
 const extractSpeciesNames = (chain) => {
   let speciesNames = [];
   const traverse = (node) => {
@@ -89,61 +124,19 @@ const extractSpeciesNames = (chain) => {
   return speciesNames;
 };
 
-// Função para buscar informações de múltiplos Pokémon
 const fetchMultiplePokemon = async (pokemonList) => {
-  // Função para traduzir os tipos de inglês para português
-  const traduzirTipo = (type) => {
-    const tipos = {
-      normal: "Normal",
-      fighting: "Lutador",
-      flying: "Voador",
-      poison: "Venenoso",
-      ground: "Terra",
-      rock: "Pedra",
-      bug: "Inseto",
-      ghost: "Fantasma",
-      steel: "Aço",
-      fire: "Fogo",
-      water: "Água",
-      grass: "Planta",
-      electric: "Elétrico",
-      psychic: "Psíquico",
-      ice: "Gelo",
-      dragon: "Dragão",
-      dark: "Noturno",
-      fairy: "Fada",
-      unknown: "Desconhecido",
-      shadow: "Sombra",
-    };
-
-    return tipos[type] || type;
-  };
-
   for (const pokemon of pokemonList) {
     const data = await fetchPokemon(pokemon);
-
     if (data) {
       const liElement = document.createElement("li");
-      liElement.classList.add(data.types[0].type.name); // Adiciona a classe do tipo principal
-
+      liElement.classList.add(data.types[0].type.name);
       const imgElement = document.createElement("img");
-      imgElement.src =
-        data["sprites"]["versions"]["generation-v"]["black-white"]["animated"][
-          "front_default"
-        ];
+      imgElement.src = data.sprites.front_default;
       imgElement.alt = data.name;
-
       const infoElement = document.createElement("div");
-      infoElement.innerHTML = `
-        <p class="name">${data.id} - ${capitalizeFirstLetter(data.name)} </p>
-        <p class="type">${traduzirTipo(data.types[0].type.name)}</p>
-        ${
-          data.types[1]
-            ? `<p class="type">${traduzirTipo(data.types[1].type.name)}</p>`
-            : ""
-        }
-      `;
-
+      infoElement.innerHTML = `<p class="name"> ${capitalizeFirstLetter(
+        data.name
+      )} </p>`;
       liElement.appendChild(imgElement);
       liElement.appendChild(infoElement);
       pokemonImages.appendChild(liElement);
@@ -152,52 +145,75 @@ const fetchMultiplePokemon = async (pokemonList) => {
     }
   }
 };
+
 const capitalizeFirstLetter = (text) => {
   return text.charAt(0).toUpperCase() + text.slice(1);
 };
 
-// Função para renderizar a cadeia evolutiva de um Pokémon
 async function getPokemonEvolution(pokemonId) {
   try {
     const evoGroupUrl = await fetchEvolutionGroup(pokemonId);
     const evolutionData = await fetchEvolutionChain(evoGroupUrl);
     const speciesNames = extractSpeciesNames(evolutionData.chain);
-    pokemonImages.innerHTML = ""; // Limpar imagens antigas antes de adicionar novas
     await fetchMultiplePokemon(speciesNames);
   } catch (error) {
     console.error("Erro ao buscar informações de evolução:", error);
   }
 }
 
-// Evento de envio do formulário
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const pokemon = input.value.toLowerCase();
+  clearElements();
   renderPokemon(pokemon);
   getPokemonEvolution(pokemon);
 });
 
-// Botões de navegação
 btnNext.addEventListener("click", () => {
   if (index < 1025) {
     index++;
+    clearElements();
     renderPokemon(index);
     getPokemonEvolution(index);
-  } else {
-    return;
   }
 });
 
 btnPrev.addEventListener("click", () => {
   if (index > 1) {
     index--;
+    clearElements();
     renderPokemon(index);
     getPokemonEvolution(index);
-  } else {
-    return;
   }
 });
 
-// Renderizar o Pokémon inicial
 renderPokemon(index);
 getPokemonEvolution(index);
+
+async function searchPokemonCards() {
+  const pokemonName = document
+    .getElementById("pokemon-name")
+    .value.trim()
+    .toLowerCase();
+  const apiUrl = `https://api.pokemontcg.io/v1/cards?name=${pokemonName}`;
+
+  try {
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+
+    // Limpar o conteúdo atual
+    const cardsContainer = document.getElementById("cards-container");
+    cardsContainer.innerHTML = "";
+
+    // Adicionar imagens das cartas encontradas
+    data.cards.forEach((card) => {
+      const cardImage = document.createElement("img");
+      cardImage.src = card.imageUrl;
+      cardImage.alt = card.name;
+
+      cardsContainer.appendChild(cardImage);
+    });
+  } catch (error) {
+    console.error("Erro ao buscar cartas Pokémon:", error);
+  }
+}

@@ -15,30 +15,59 @@
   </head>
   <body>
     <main>
-      <img src="#" alt="pokemon" class="pokemon__image" />
+      <section>
+        <img src="#" alt="pokemon" class="pokemon__image" />
 
-      <h1 class="pokemon__data">
-        <span class="pokemon__number"></span> -
-        <span class="pokemon__name"></span>
-      </h1>
+        <h1 class="pokemon__data">
+          <span class="pokemon__number"></span> -
+          <span class="pokemon__name"></span>
+        </h1>
 
-      <form class="form">
-        <input
-          type="search"
-          class="input__search"
-          placeholder="Name or Number"
-          required
-        />
-      </form>
-      <div class="buttons">
-        <button class="button btn-prev">Prev &lt;</button>
-        <button class="button btn-next">Next &gt;</button>
+        <form class="form">
+          <input
+            type="search"
+            class="input__search"
+            placeholder="Name or Number"
+            required
+          />
+        </form>
+        <div class="buttons">
+          <button class="button btn-prev">Prev &lt;</button>
+          <button class="button btn-next">Next &gt;</button>
+        </div>
+        <img src="assets/pokedex.png" alt="pokedex" class="pokedex" />
+      </section>
+      <div class="evoGroup">
+        <div class="details">
+          <div class="atributos">
+            <h2>Atributos</h2>
+            <div class="atributo"></div>
+          </div>
+          <div class="types">
+            <h2>Tipos</h2>
+            <div class="type"></div>
+          </div>
+        </div>
+        <div class="evolucoes">
+          <h2>Evolução</h2>
+          <ul id="pokemonImages"></ul>
+        </div>
+        <div class="descricao">
+          <h2>Descrição</h2>
+          <p class="desc"></p>
+        </div>
       </div>
-      <img src="assets/pokedex.png" alt="pokedex" class="pokedex" />
     </main>
-    <div class="evoGroup">
-      <h2>Evolução</h2>
-      <ul id="pokemonImages"></ul>
-    </div>
+    <aside>
+      <h2>Ver cartas por Pokemon</h2>
+      <input
+        type="text"
+        id="pokemon-name"
+        placeholder="Nome do Pokémon..."
+      />
+      <button onclick="searchPokemonCards()">Buscar</button>
+
+      <div id="cards-container"></div>
+    </aside>
   </body>
 </html>
